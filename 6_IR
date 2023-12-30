@@ -1,0 +1,137 @@
+
+//Motor one
+#define ENA 6
+#define IN1 7
+#define IN2 8
+
+//Motor two
+#define IN3 9
+#define IN4 10
+#define ENB 11
+
+#define Speed 80
+
+void setup() {
+  Serial.begin(9600);
+  //Sensor pins
+  pinMode(2, INPUT);
+  pinMode(3, INPUT);
+  pinMode(4, INPUT);
+  pinMode(5, INPUT);
+  pinMode(12, INPUT);
+  pinMode(13, INPUT);
+  //Motor one
+  pinMode(ENA, OUTPUT);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  //Motor two
+  pinMode(ENB, OUTPUT);
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
+
+}
+void loop() {
+  int s1 = digitalRead(2); // Read analog sensor value
+  int s2 = digitalRead(3);
+  int s3 = digitalRead(4);
+  int s4 = digitalRead(5);
+  int s5 = digitalRead(12);
+  int s6 = digitalRead(13);
+  Serial.println("s1=" + String(s1) + ", s2=" + String(s2) + ", s3=" + String(s3) + ", s4=" + String(s4) + ", s5=" + String(s5) + + ", s6=" + String(s6));
+
+  bool SOne = digitalRead(2); //dis
+  bool STwo = digitalRead(3);
+  bool SThree = digitalRead(4);
+  bool SFour = digitalRead(5); //dis
+  bool SFive = digitalRead(12);
+  bool midT = digitalRead(13);
+  // if (SOne == 0 && STwo == 1 && SThree == 1 && SFour == 0 ) {
+  //   forward();
+  // } else if (SOne == 1 && STwo == 1 && SThree == 1 && SFour == 1) {
+  //   Stop();
+  // } else if (SOne == 0 && STwo == 0 && SThree == 0 && SFour == 0) {
+  //   Stop();
+  // }  else if (SOne == 1 && STwo == 1 && SThree == 0 && SFour == 0) {
+  //   turnleft();
+  // } else if (SOne == 0 && STwo == 0 && SThree == 1 && SFour == 1) {
+  //   turnright();
+  // }
+  // if (STwo == 1 && SThree == 1) {
+  //   forward();
+  // } if (STwo == 0 && SThree == 1 ) {
+  //   turnright();
+  // }  if ( STwo == 1 && SThree == 0) {
+  //   turnleft();
+  // }  if ( STwo == 0 && SThree == 0 ) {
+  //   Stop();
+  // } 
+  
+  if (SOne==HIGH && STwo == HIGH && SFive == LOW && midT == HIGH && SThree == HIGH && SFour==HIGH)//Straight path
+    {
+      //high --> white surface
+      //low --> black surface
+      //L S R B
+     forward();
+    }
+
+  if (SFive == LOW && midT==LOW && SThree == LOW && (SThree == LOW || SFour==LOW))//Left turn
+    {
+     turnleft();
+    }
+
+    //Left wla T
+    if (SOne==HIGH  && STwo == HIGH && SFive == LOW && midT == HIGH && SThree == LOW && SFour==LOW)//Left T Intersection
+    {
+      turnleft();// As Left is possible
+    }
+      //all high and mit low U-TURN
+    if (SOne==HIGH  && STwo == HIGH && SFive == HIGH && midT == LOW && SThree == HIGH && SFour==HIGH)//Left T Intersection
+    {
+      turnleft();// As Left is possible
+    }
+
+  if ((SOne==LOW || STwo == LOW) && STwo == LOW && SFive == LOW && midT==LOW && SThree == HIGH && SFour==HIGH)//Right Turn
+    {
+      turnright();
+    }
+
+  if (SOne==LOW && STwo == LOW && SFive == LOW && midT == HIGH && SThree == LOW && SFour==LOW)//4 Lane intersection
+    {
+     //turnleft(); //As no other direction is possible
+      Stop();
+    }
+}
+
+void forward() {
+  analogWrite(ENA, Speed);
+  analogWrite(ENB, Speed);
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+}
+void turnright() {
+  analogWrite(ENA, Speed);
+  analogWrite(ENB, Speed);
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+}
+void turnleft() {
+  analogWrite(ENA, Speed);
+  analogWrite(ENB, Speed);
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, HIGH);
+}
+
+void Stop() {
+  analogWrite(ENA, 0);
+  analogWrite(ENB, 0);
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, LOW);
+}
