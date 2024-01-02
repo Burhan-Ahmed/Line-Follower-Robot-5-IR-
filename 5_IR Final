@@ -11,7 +11,7 @@
 #define Speed 160
 
 void setup() {
- // Serial.begin(9600);
+  Serial.begin(9600);
   //Sensor pins
   pinMode(2, INPUT);
   pinMode(3, INPUT);
@@ -30,59 +30,51 @@ void setup() {
 
 }
 void loop() {
-  //int sensorValue = digitalRead(12); // Read analog sensor value
-  //Serial.println(sensorValue); // Print the sensor value to the serial monitor
- 
+  int left_most = digitalRead(2); // Read analog sensor value
+  int left = digitalRead(3);
+  int center = digitalRead(12);
+  int upper_center = digitalRead(13);
+  int right = digitalRead(4);
+  int right_most = digitalRead(5);
+  Serial.print("Left Most = ");     // Print label
+  Serial.print(left_most);          // Print sensor value
+  Serial.print(", Left = ");        // Print label
+  Serial.print(left);               // Print sensor value
+  Serial.print(", Center = ");      // Print label
+  Serial.print(center);             // Print sensor value
+  Serial.print(", Upper Center = ");// Print label
+  Serial.print(upper_center);       // Print sensor value
+  Serial.print(", Right = ");       // Print label
+  Serial.print(right);              // Print sensor value
+  Serial.print(", Right Most = ");  // Print label
+  Serial.println(right_most);
+
   bool SOne = digitalRead(2); //dis
   bool STwo = digitalRead(3);
   bool SThree = digitalRead(4);
   bool SFour = digitalRead(5); //dis
   bool SFive = digitalRead(12);
-  bool upper = digitalRead(13);
-  // if (SOne == 0 && STwo == 1 && SThree == 1 && SFour == 0 ) {
-  //   forward();
-  // } else if (SOne == 1 && STwo == 1 && SThree == 1 && SFour == 1) {
-  //   Stop();
-  // } else if (SOne == 0 && STwo == 0 && SThree == 0 && SFour == 0) {
-  //   Stop();
-  // }  else if (SOne == 1 && STwo == 1 && SThree == 0 && SFour == 0) {
-  //   turnleft();
-  // } else if (SOne == 0 && STwo == 0 && SThree == 1 && SFour == 1) {
-  //   turnright();
-  // }
-  // if (STwo == 1 && SThree == 1) {
-  //   forward();
-  // } if (STwo == 0 && SThree == 1 ) {
-  //   turnright();
-  // }  if ( STwo == 1 && SThree == 0) {
-  //   turnleft();
-  // }  if ( STwo == 0 && SThree == 0 ) {
-  //   Stop();
-  // } 
-  //  //delay(100); 
-  //   IR1 = digitalRead(<PIN 1>)
-  // IR2 = digitalRead(<PIN 2>)
-  // IR3 = digitalRead(<PIN 3>)
+   bool Upper = digitalRead(13);
 
   if (SOne==HIGH && STwo == HIGH && SFive == LOW && SThree == HIGH && SFour==HIGH)//Straight path
     {
      forward();
     }
 
-  if (SOne==HIGH && STwo == HIGH  && SFive == LOW && SThree == LOW && (SThree == LOW || SFour==LOW))//Left turn
+  if (SOne==HIGH && STwo == HIGH  && SFive == HIGH && SThree == LOW && (SThree == LOW || SFour==LOW))//Left turn
     {
      turnleft();
     }
 
-  if ((SOne==LOW || STwo == LOW) && STwo == LOW && SFive == LOW && SThree == HIGH && SFour==HIGH)//Right Turn
+  if ((SOne==LOW || STwo == LOW) && STwo == LOW && SFive == HIGH && SThree == HIGH && SFour==HIGH)//Right Turn
     {
       turnright();
     }
 
-  // if (SOne==LOW && STwo == LOW && SFive == LOW && SThree == LOW && SFour==LOW)//T Intersection
-  //   {
-  //     turnleft(); // As left is possible
-  //   }
+  if (SOne==LOW && STwo == LOW && SFive == LOW && SThree == LOW && SFour==LOW)//T Intersection
+    {
+      turnleft(); // As left is possible
+    }
 
   if (SOne == LOW && STwo == LOW && SFive == LOW && SThree == HIGH && SFour==HIGH)//Right T Tntersection
     {
@@ -96,21 +88,14 @@ void loop() {
 
   if (SOne==LOW && STwo == LOW && SFive == LOW && SThree == LOW && SFour==LOW)//4 Lane intersection
     {
-      if (upper==LOW){
-      Stop();
-      }
-      else
-      {
-      turnleft();
-      }
-     //As no other direction is possible
+     turnleft(); //As no other direction is possible
       //Stop();
     }
 
-  // if (SOne==LOW && STwo == LOW && SFive == LOW && upper==LOW && SThree == LOW && SFour==LOW)//Straight path
-  //   {
-  //    Stop();
-  //   }
+   if (SOne==LOW && STwo == LOW && SFive == LOW && Upper==LOW && SThree == LOW && SFour==LOW)
+    {
+      Stop();
+    }
 }
 
 void forward() {
@@ -137,23 +122,6 @@ void turnleft() {
   digitalWrite(IN3, HIGH);
   digitalWrite(IN4, LOW);
 }
-
-void U_Turn() {
-  // Stop both motors
-  analogWrite(ENA, 0);
-  analogWrite(ENB, 0);
-  // Reverse the direction of one motor while keeping the other one stationary
-  digitalWrite(IN1, HIGH);
-  digitalWrite(IN2, LOW);
-  digitalWrite(IN3, LOW);
-  digitalWrite(IN4, HIGH);
-  // Adjust the delay based on the characteristics of your robot and the speed of your motors
-  delay(1000);
-  // Stop both motors again
-  analogWrite(ENA, 0);
-  analogWrite(ENB, 0);
-}
-
 
 void Stop() {
   analogWrite(ENA, 0);
