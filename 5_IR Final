@@ -8,7 +8,7 @@
 #define IN4 10
 #define ENB 11
 
-#define Speed 170
+#define Speed 160
 
 void setup() {
  // Serial.begin(9600);
@@ -18,6 +18,7 @@ void setup() {
   pinMode(4, INPUT);
   pinMode(5, INPUT);
   pinMode(12, INPUT);
+  pinMode(13, INPUT);
   //Motor one
   pinMode(ENA, OUTPUT);
   pinMode(IN1, OUTPUT);
@@ -37,6 +38,7 @@ void loop() {
   bool SThree = digitalRead(4);
   bool SFour = digitalRead(5); //dis
   bool SFive = digitalRead(12);
+  bool upper = digitalRead(13);
   // if (SOne == 0 && STwo == 1 && SThree == 1 && SFour == 0 ) {
   //   forward();
   // } else if (SOne == 1 && STwo == 1 && SThree == 1 && SFour == 1) {
@@ -67,20 +69,20 @@ void loop() {
      forward();
     }
 
-  if (SOne==HIGH && STwo == HIGH  && SFive == HIGH && SThree == LOW && (SThree == LOW || SFour==LOW))//Left turn
+  if (SOne==HIGH && STwo == HIGH  && SFive == LOW && SThree == LOW && (SThree == LOW || SFour==LOW))//Left turn
     {
      turnleft();
     }
 
-  if ((SOne==LOW || STwo == LOW) && STwo == LOW && SFive == HIGH && SThree == HIGH && SFour==HIGH)//Right Turn
+  if ((SOne==LOW || STwo == LOW) && STwo == LOW && SFive == LOW && SThree == HIGH && SFour==HIGH)//Right Turn
     {
       turnright();
     }
 
-  if (SOne==LOW && STwo == LOW && SFive == LOW && SThree == LOW && SFour==LOW)//T Intersection
-    {
-      turnleft(); // As left is possible
-    }
+  // if (SOne==LOW && STwo == LOW && SFive == LOW && SThree == LOW && SFour==LOW)//T Intersection
+  //   {
+  //     turnleft(); // As left is possible
+  //   }
 
   if (SOne == LOW && STwo == LOW && SFive == LOW && SThree == HIGH && SFour==HIGH)//Right T Tntersection
     {
@@ -94,14 +96,21 @@ void loop() {
 
   if (SOne==LOW && STwo == LOW && SFive == LOW && SThree == LOW && SFour==LOW)//4 Lane intersection
     {
-     turnleft(); //As no other direction is possible
+      if (upper==LOW){
+      Stop();
+      }
+      else
+      {
+      turnleft();
+      }
+     //As no other direction is possible
       //Stop();
     }
 
-  // if (SThree == LOW && SFive == LOW && STwo == LOW)//End of Maze
+  // if (SOne==LOW && STwo == LOW && SFive == LOW && upper==LOW && SThree == LOW && SFour==LOW)//Straight path
   //   {
-  //    Stop(); //As no other direction is possible
-  //   } 
+  //    Stop();
+  //   }
 }
 
 void forward() {
