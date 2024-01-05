@@ -11,6 +11,7 @@
 #define Speed 160
 
 void setup() {
+  //setting Baud Rate
   Serial.begin(9600);
   //Sensor pins
   pinMode(2, INPUT);
@@ -71,7 +72,7 @@ void loop() {
       turnright();
     }
 
-  if (SOne==LOW && STwo == LOW && SFive == LOW && SThree == LOW && SFour==LOW)//T Intersection
+  if (SOne==LOW && STwo == LOW && SFive == LOW && SThree == LOW && SFour==LOW)//T or + Cross Intersection
     {
       turnleft(); // As left is possible
     }
